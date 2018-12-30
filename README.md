@@ -1,49 +1,111 @@
-Symfony Demo Application
+Symfony React Application
 ========================
 
-The "Symfony Demo Application" is a reference application created to show how
-to develop applications following the [Symfony Best Practices][1].
+The "Symfony React" is a reference application created to show how
+to develop applications following the [Symfony Best Practices][1] with React on Docker.
 
-Requirements
+## FEATURES
 ------------
 
-  * PHP 7.1.3 or higher;
-  * PDO-SQLite PHP extension enabled;
-  * and the [usual Symfony application requirements][2].
+  * PHP-FPM 7.1.3 or higher;
+  * PostgreSQL 10.1;
+  * and the [usual Symfony application requirements][2];
+  * Nginx;
+  * [React][4] and [Redux][7];
 
-Installation
-------------
+Each service runs in a dedicated container, and the whole thing is orchestrated with docker-compose.
+
+## Requirements
+---------------
+
+You need [Docker Engine][5] and [Docker Compose][6] installed on your machine.
+
+## Installation
+---------------
+
+* Run docker ;
 
 ```bash
-$ composer create-project symfony/symfony-demo
+$ docker-compose up
 ```
 
-Usage
------
-
-There's no need to configure anything to run the application. Just execute this
-command to run the built-in web server and access the application in your
-browser at <http://localhost:8000>:
+* Enter in php container;
 
 ```bash
-$ cd symfony-demo/
-$ php bin/console server:run
+$ docker exec -it [container php]  bash
 ```
 
-Alternatively, you can [configure a web server][3] like Nginx or Apache to run
-the application.
-
-Tests
------
-
-Execute this command to run tests:
+* Drop database;
 
 ```bash
-$ cd symfony-demo/
+php bin/console doctrine:database:drop  --force 
+```
+
+* Create database;
+
+```bash
+php bin/console doctrine:database:create 
+```
+
+* Update schema;
+
+```bash
+php bin/console doctrine:schema:update 
+```
+
+* Run fixture;
+
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+## Usage
+-----
+
+* Alternatively, you must add in /etc/hosts;
+
+```bash
+127.0.0.1 infinite.dev
+```
+
+## Tests
+--------
+
+* Enter in php container;
+
+```bash
+$ docker exec -it [container php]  bash
+```
+
+* Execute this command to run tests;
+
+```bash
 $ ./bin/phpunit
 ```
 
+## Access to Application
+------------------------
+
+* **URL:** `http://infinite.dev`
+
+## Access to postgres
+---------------------
+
+* `postgres:5432` (host only in docker container)
+* **Username:** infinite (as a default)
+* **Password:** infinitepass (as a default)
+
+## Access to PgAdmin
+--------------------
+
+* **URL:** `http://infinite.dev:5050`
+* **Username:** pgadmin4@pgadmin.org (as a default)
+* **Password:** admin (as a default)
+
 [1]: https://symfony.com/doc/current/best_practices/index.html
 [2]: https://symfony.com/doc/current/reference/requirements.html
-[3]: https://symfony.com/doc/current/cookbook/configuration/web_server_configuration.html
-# Dockersf4
+[4]: https://reactjs.org/
+[5]: https://docs.docker.com/engine/
+[6]: https://docs.docker.com/compose/
+[7]: https://redux.js.org/
+
